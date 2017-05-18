@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Associado {
 	
@@ -8,8 +9,8 @@ public class Associado {
 	private long dataAssociacao;
 	private int nivel;
 	private String registaNivel;
-	private String registaDePagamento;
-	/**criar uma classe pagamento*/
+	private String registroDePagamento;
+	private ArrayList<Pagamentos> pagamentos;
 	public int getNumero() {
 		return numero;
 	}
@@ -53,11 +54,16 @@ public class Associado {
 	public void setRegistaNivel(String registaNivel) {
 		this.registaNivel = registaNivel;
 	}
-	public String getRegistaDePagamento() {
-		return registaDePagamento;
+	public String registroDePagamento() {
+		return registroDePagamento;
 	}
-	public void setRegistaDePagamento(String registaDePagamento) {
-		this.registaDePagamento = registaDePagamento;
+	public void registroDePagamento(String registaDePagamento) {
+		this.registroDePagamento = registaDePagamento;
+	}
+	
+	
+	public ArrayList<Pagamentos> getPagamentos() {
+		return pagamentos;
 	}
 	public void validacao() throws ValidacaoException{
 		if(this.numero < 0){
@@ -75,5 +81,28 @@ public class Associado {
 		}
 	}
 	
+	public Pagamentos pesquisarPagamentos(String nomeTaxa, int ano) {
+		for (Pagamentos a : pagamentos) {
+			if (a.getTaxa() == nomeTaxa && a.getAno() == ano){
+				return a;
+			}
+		}
+		return null;
+	}
+	
+	
+	public Associado(int numero, String nome, String endereco, long nascimento, long dataAssociacao) {
+		super();
+		//caso o a data seja tipo data adicionar um campo
+		this.numero = numero;
+		this.nome = nome;
+		this.endereco = endereco;
+		this.nascimento = nascimento;
+		this.dataAssociacao = dataAssociacao;
+		this.nivel = 1;
+		this.registaNivel = "";
+		this.registroDePagamento = "";
+		this.pagamentos = new ArrayList<Pagamentos>();
+	}
 	
 }

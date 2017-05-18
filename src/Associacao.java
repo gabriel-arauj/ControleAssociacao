@@ -6,8 +6,8 @@ public class Associacao {
 	private String nome;
 	private String endereco;
 	
-	private ArrayList<Associado> associados = new ArrayList<Associado>();
-	private ArrayList<Taxa> taxas = new ArrayList<Taxa>();
+	private ArrayList<Associado> associados;
+	private ArrayList<Taxa> taxas;
 
 	public int getNumero() {
 		return numero;
@@ -40,8 +40,7 @@ public class Associacao {
 	public ArrayList<Taxa> getTaxas() {
 		return taxas;
 	}
-
-
+	
 	public void validacao() throws ValidacaoException{
 		if(this.numero < 0){
 			throw new ValidacaoException("Numero da associação");
@@ -68,5 +67,14 @@ public class Associacao {
 			}
 		}
 		throw new ElementoInexistente("Taxa");
+	}
+
+	public Associacao(int numero, String nome, String endereco) {
+		super();
+		this.numero = numero;
+		this.nome = nome;
+		this.endereco = endereco;
+		this.associados = new ArrayList<Associado>();
+		this.taxas = new ArrayList<Taxa>();
 	}
 }

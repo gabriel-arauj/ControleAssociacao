@@ -7,7 +7,7 @@ public class ControleAssociacao {
 
 	}*/
 
-	private ArrayList<Associacao> associacoes = new ArrayList<Associacao>();
+	private ArrayList<Associacao> associacoes;
 	
 	/* 1.
 	 * Método para criar uma associação, verificando todo o correto preenchimento
@@ -83,13 +83,24 @@ public class ControleAssociacao {
 	 * dela está compatível com o ano informado, se o pagamento é maior ou igual ao valor de uma parcela 
 	 * e se o valor é menor ou igual ao que ainda é devido pelo associado. 
 	 */
-	public void registrarPagamento(int assoc, String nomeTaxa, int associado, int mes, int ano, double valor) 
+	public void registrarPagamento(int assoc, String nomeTaxa, int associado, int mes, int ano, float valor) 
 			throws ValidacaoException, ElementoInexistente {
 		Associacao ass = pesquisarAssociacao(assoc);
 		Associado a = ass.pesquisarAssociado(associado);
 		Taxa taxa = ass.pesquisarTaxa(nomeTaxa, ano);
-		if(valor < taxa.valorMensal()){
-			throw new ValidacaoException("Valor de pagamento");
+		Pagamentos pagamento = a.pesquisarPagamentos(nomeTaxa, ano);
+		
+		if(pagamento == null){//criar um novo pagamento
+			Pagamentos p = new Pagamentos(taxa.getNome(), ano);
+			a.getPagamentos().add(p);
+		}		
+		if(valor < taxa.valorMensal(pagamento)){
+			throw new ValidacaoException("Valor de pagamento(menor)");
+		}if(valor > taxa.getValorAnual() - pagamento.getPago()){
+			throw new ValidacaoException("Valor de pagamento(maior)");
+		}else{		
+			pagamento.pagarTaxa(taxa.getNome(), valor);
+			a.registroDePagamento("Taxa: " +taxa.getNome()+ ". Valor pago: " +valor+ ". Mês: " +mes );
 		}
 	}
 	
@@ -97,9 +108,13 @@ public class ControleAssociacao {
 	 * Esse método deve retornar o valor total de pagamentos feitos por um associado em um determinado ano, 
 	 * para uma determinada taxa. 
 	 * */
-	public double somarPagamentoDeAssociado (int associação, int numeroAssociado, String taxa, int ano) 
+	public double somarPagamentoDeAssociado (int assoc, int numeroAssociado, String nomeTaxa, int ano) 
 			throws ElementoInexistente{
-		return 1;
+		Associacao ass = pesquisarAssociacao(assoc);
+		Associado a = ass.pesquisarAssociado(numeroAssociado);
+		Pagamentos pagamentos = a.pesquisarPagamentos(nomeTaxa, ano);
+		
+		return pagamentos.getPago();
 	}
 	
 	public Associacao pesquisarAssociacao(int cod) throws ElementoInexistente {
@@ -110,4 +125,10 @@ public class ControleAssociacao {
 		}
 		throw new ElementoInexistente("Associação");
 	}
+
+	public ControleAssociacao() {
+		super();
+		this.associacoes  = new ArrayList<Associacao>();
+	}
+	
 }

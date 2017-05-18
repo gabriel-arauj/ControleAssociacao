@@ -32,11 +32,11 @@ public class Taxa {
 		this.anoDeVigencia = anoDeVigencia;
 	}
 	//******
-	public float valorMensal() throws ValidacaoException{
+	public float valorMensal(Pagamentos pagamento) throws ValidacaoException{
 		if(quantParcelas <= 0){
-			throw new ValidacaoException("Novo nivel");
+			throw new ValidacaoException("quantidade de parcelas");
 		}
-		return valorAnual/quantParcelas;
+		return (valorAnual-pagamento.getPago())/(quantParcelas-pagamento.getMes());
 	}
 	
 	
@@ -51,4 +51,13 @@ public class Taxa {
 			throw new ValidacaoException("Ano de vigência da taxa");
 		}
 	}
+	public Taxa(String nome, float valorAnual, int quantParcelas, int anoDeVigencia) {
+		super();
+		this.nome = nome;
+		this.valorAnual = valorAnual;
+		this.quantParcelas = quantParcelas;
+		this.anoDeVigencia = anoDeVigencia;
+	}
+	
+	
 }
